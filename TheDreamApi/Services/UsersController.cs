@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System;
 using System.Data;
 using Microsoft.AspNetCore.Cors;
+using System.Text.Json.Nodes;
+using System.Text.Json;
 
 namespace TheDreamApi.web_service
 {
@@ -14,10 +16,14 @@ namespace TheDreamApi.web_service
     {
         //[EnableCors("AllowSpecificOrigin")]
         [HttpPost("GetUserData")]
-        public IActionResult GetUserData(string username, string password)
+        public IActionResult GetUserData(JsonElement json)
         {
             try
             {
+                dynamic obj = JsonNode.Parse(json.GetRawText());
+                string username = (string)obj["username"];
+                string password = (string)obj["password"];
+
                 // Get the user data
                 var dt = UsersBLL.GetUserDataBLL(username, password);
                 if (dt == null)
@@ -39,7 +45,42 @@ namespace TheDreamApi.web_service
                 return StatusCode(500, new { error = "An error occurred." });
             }
         }
-      
-        // Rest of the code...
+
+        //public static string Register(JsonElement json)
+        //{
+        //    try
+        //    {
+        //        dynamic obj = JsonNode.Parse(json.GetRawText());
+        //        string username = (string)obj["username"];
+        //        string password = (string)obj["password"];
+        //        string email = (string)obj["email"];
+        //        int affected = 0;
+        //        string checkQuery = $"select username from Users where username='{username}'";
+        //        DataTable check = SQLHelper.SelectData(checkQuery);
+        //        if (check.Rows.Count == 0)
+        //        {
+
+        //            string query = $"INSERT INTO Users (username, password, email) VALUES ('{username}',' {password}', '{email}')";
+        //            affected = SQLHelper.DoQuery(query);
+
+        //        }
+        //        else
+        //        {
+        //            return ("username already taken");
+        //        }
+        //        if (affected > 0)
+        //        {
+        //            return ("ok");
+        //        }
+        //        else
+        //        {
+        //            return ("error in the query");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ("unkown error");
+        //    }
+        //}
     }
 }
