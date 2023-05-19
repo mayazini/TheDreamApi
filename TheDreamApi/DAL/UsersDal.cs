@@ -27,14 +27,15 @@ namespace TheDreamApi.DAL
                 dynamic obj = JsonNode.Parse(json.GetRawText());
                 string username = (string)obj["username"];
                 string password = (string)obj["password"];
-                string email = (string)obj["email"];
+                string id = (string)obj["email"];//untill can change table definition
+                //string email = (string)obj["email"];
                 int affected = 0;
                 string checkQuery = $"select username from Users where username='{username}'";
                 DataTable check = SQLHelper.SelectData(checkQuery);
                 if (check.Rows.Count == 0)
                 {
 
-                    string query = $"INSERT INTO Users (username, password, email) VALUES ('{username}',' {password}', '{email}')";
+                    string query = $"INSERT INTO Users (Id,username, password) VALUES ('{id}','{username}',' {password}')";
                     affected = SQLHelper.DoQuery(query);
 
                 }
