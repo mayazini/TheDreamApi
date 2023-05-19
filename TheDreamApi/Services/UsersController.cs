@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using System.Data;
+using Microsoft.AspNetCore.Cors;
 
 namespace TheDreamApi.web_service
 {
@@ -11,6 +12,7 @@ namespace TheDreamApi.web_service
     [ApiController]
     public class UserController : ControllerBase
     {
+        //[EnableCors("AllowSpecificOrigin")]
         [HttpPost("GetUserData")]
         public IActionResult GetUserData(string username, string password)
         {
@@ -37,7 +39,7 @@ namespace TheDreamApi.web_service
                 return StatusCode(500, new { error = "An error occurred." });
             }
         }
-
+      
         // Rest of the code...
     }
 }
