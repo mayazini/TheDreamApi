@@ -1,4 +1,6 @@
 ﻿using System.Data;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace TheDreamApi.DAL
 {
@@ -10,5 +12,18 @@ namespace TheDreamApi.DAL
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
+
+        public static string CreateNewProject(JsonElement json)
+        {
+            dynamic obj = JsonNode.Parse(json.GetRawText());
+            string projectName = (string)obj["projectName"];
+            string description = (string)obj["description"];
+            string query = $"INSERT INTO CinemaProjects (projectName,description, creatorid) VALUES ('{projectName}','{description}','1')";
+            int result = SQLHelper.DoQuery(query);
+            if(result == 0) { return "didnt work"; }
+            return "";
+        }
     }
+
+
 }

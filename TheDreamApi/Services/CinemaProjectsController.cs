@@ -4,6 +4,7 @@ using System.Data;
 using System.Text.Json.Nodes;
 using System.Text.Json;
 using TheDreamApi.BLL;
+using Newtonsoft.Json.Linq;
 
 namespace TheDreamApi.Services
 {
@@ -37,6 +38,30 @@ namespace TheDreamApi.Services
                 // Log the error and return a 500 Internal Server Error
                 return StatusCode(500, new { error = "An error occurred." });
             }
+        }
+
+
+        [HttpPut("CreateNewProject")]
+        public IActionResult CreateNewProject([FromBody] JsonElement value)
+        {
+            try
+            {
+                string response = CinemaProjectsBLL.CreateNewProject(value);
+                if (response == "")
+                {
+                    return Ok();
+                }
+                if (response == "didnt work")
+                {
+                    return NotFound(new { error = "didn't work" });
+                }
+                else
+                {
+
+                    return StatusCode(500, new { error = response });
+                }
+            }
+            catch (Exception ex) { return StatusCode(500, new { error = "An error occurred." }); }
         }
     }
 }

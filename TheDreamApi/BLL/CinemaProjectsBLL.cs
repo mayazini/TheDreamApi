@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Text.Json;
 using TheDreamApi.DAL;
 
 namespace TheDreamApi.BLL
@@ -14,6 +15,12 @@ namespace TheDreamApi.BLL
                 return null;
             }
             return data;
+        }
+
+        public static string CreateNewProject(JsonElement json)
+        {
+            string response = CinemaProjectsDAL.CreateNewProject(json);
+            return response;
         }
 
     }
