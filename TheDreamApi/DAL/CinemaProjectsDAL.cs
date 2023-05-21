@@ -12,6 +12,14 @@ namespace TheDreamApi.DAL
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
+        public static DataTable GetCinemaProjectsById(JsonElement json)
+        {
+            dynamic obj = JsonNode.Parse(json.GetRawText());
+            string id = (string)obj["Id"];
+            string query = "select * from CinemaProjects where CreatorId = '"+id+"'";
+            DataTable result = SQLHelper.SelectData(query);
+            return result;
+        }
 
         public static string CreateNewProject(JsonElement json)
         {

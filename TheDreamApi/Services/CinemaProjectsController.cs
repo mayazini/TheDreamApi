@@ -40,6 +40,33 @@ namespace TheDreamApi.Services
             }
         }
 
+        [HttpGet("GetCinemaProjectsById")]
+        public IActionResult GetCinemaProjectsById([FromBody] JsonElement value)
+        {
+            try
+            {
+                // Get the user data
+                var dt = CinemaProjectsBLL.GetCinemaProjectsById(value);
+                if (dt == null)
+                {
+                    return NotFound(new { error = "no projects" });
+                }
+
+                // Convert DataTable to a list of dictionaries
+                var rows = dt.AsEnumerable()
+                    .Select(row => dt.Columns.Cast<DataColumn>()
+                        .ToDictionary(column => column.ColumnName, column => row[column]));
+
+                // Return the serialized data
+                return Ok(rows);
+            }
+            catch (Exception ex)
+            {
+                // Log the error and return a 500 Internal Server Error
+                return StatusCode(500, new { error = "An error occurred." });
+            }
+        }
+
 
         [HttpPut("CreateNewProject")]
         public IActionResult CreateNewProject([FromBody] JsonElement value)
