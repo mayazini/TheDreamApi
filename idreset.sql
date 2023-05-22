@@ -1,0 +1,1 @@
+﻿DBCC CHECKIDENT ('CinemaProjects', RESEED, 0);

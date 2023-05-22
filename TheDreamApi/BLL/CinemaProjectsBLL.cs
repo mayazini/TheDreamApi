@@ -16,9 +16,9 @@ namespace TheDreamApi.BLL
             }
             return data;
         }
-        public static DataTable GetCinemaProjectsById(JsonElement json)
+        public static DataTable GetCinemaProjectsByName(JsonElement json)
         {
-            DataTable data = CinemaProjectsDAL.GetCinemaProjectsById(json);
+            DataTable data = CinemaProjectsDAL.GetCinemaProjectsByName(json);
 
             if (data == null || data.Rows.Count == 0)// check if login incorrect
             {

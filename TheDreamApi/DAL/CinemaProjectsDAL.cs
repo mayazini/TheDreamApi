@@ -12,11 +12,11 @@ namespace TheDreamApi.DAL
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
-        public static DataTable GetCinemaProjectsById(JsonElement json)
+        public static DataTable GetCinemaProjectsByName(JsonElement json)
         {
             dynamic obj = JsonNode.Parse(json.GetRawText());
-            string id = (string)obj["Id"];
-            string query = "select * from CinemaProjects where CreatorId = '"+id+"'";
+            string creatorName = (string)obj["CreatorName"];
+            string query = "select * from CinemaProjects where CreatorName = '" + creatorName + "'";
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
@@ -26,7 +26,8 @@ namespace TheDreamApi.DAL
             dynamic obj = JsonNode.Parse(json.GetRawText());
             string projectName = (string)obj["projectName"];
             string description = (string)obj["description"];
-            string query = $"INSERT INTO CinemaProjects (projectName,description, creatorid) VALUES ('{projectName}','{description}','1')";
+            string creatorName = (string)obj["CreatorName"];
+            string query = $"INSERT INTO CinemaProjects (projectName,description, CreatorName) VALUES ('{projectName}','{description}','{creatorName}')";
             int result = SQLHelper.DoQuery(query);
             if(result == 0) { return "didnt work"; }
             return "";

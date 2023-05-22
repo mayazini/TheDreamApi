@@ -40,13 +40,13 @@ namespace TheDreamApi.Services
             }
         }
 
-        [HttpGet("GetCinemaProjectsById")]
-        public IActionResult GetCinemaProjectsById([FromBody] JsonElement value)
+        [HttpPost("GetCinemaProjectsByName")]
+        public IActionResult GetCinemaProjectsByName(JsonElement value)
         {
             try
             {
                 // Get the user data
-                var dt = CinemaProjectsBLL.GetCinemaProjectsById(value);
+                var dt = CinemaProjectsBLL.GetCinemaProjectsByName(value);
                 if (dt == null)
                 {
                     return NotFound(new { error = "no projects" });
