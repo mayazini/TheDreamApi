@@ -1,3 +1,7 @@
+
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,10 +13,16 @@ builder.Services.AddSwaggerGen();
 // Add CORS services
 builder.Services.AddCors();
 
+// Get the hosting environment
+IWebHostEnvironment env = builder.Environment;
+
+// Add the hosting environment to the services
+builder.Services.AddSingleton<IWebHostEnvironment>(env);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (env.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -35,3 +45,10 @@ app.UseCors(builder =>
 app.MapControllers();
 
 app.Run();
+
+
+
+
+
+
+

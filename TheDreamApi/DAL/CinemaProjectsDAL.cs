@@ -23,10 +23,11 @@ namespace TheDreamApi.DAL
 
         public static string CreateNewProject(JsonElement json)
         {
+
             dynamic obj = JsonNode.Parse(json.GetRawText());
             string projectName = (string)obj["projectName"];
             string description = (string)obj["description"];
-            string creatorName = (string)obj["CreatorName"];
+            string creatorName = (string)obj["creatorName"];
             string query = $"INSERT INTO CinemaProjects (projectName,description, CreatorName) VALUES ('{projectName}','{description}','{creatorName}')";
             int result = SQLHelper.DoQuery(query);
             if(result == 0) { return "didnt work"; }

@@ -23,12 +23,12 @@ namespace TheDreamApi.DAL
         public static string Register(JsonElement json)
         {
             try
-            { 
+            {
                 dynamic obj = JsonNode.Parse(json.GetRawText());
                 string username = (string)obj["username"];
                 string password = (string)obj["password"];
                 string email = (string)obj["email"];
-                //string email = (string)obj["email"];
+
                 int affected = 0;
                 string checkQuery = $"select username from Users where username='{username}'";
                 DataTable check = SQLHelper.SelectData(checkQuery);

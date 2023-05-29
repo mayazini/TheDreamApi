@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Text.Json.Nodes;
 using System.Text.Json;
 using TheDreamApi.BLL;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Hosting;
 
 namespace TheDreamApi.Services
 {
@@ -12,6 +15,7 @@ namespace TheDreamApi.Services
     [ApiController]
     public class CinemaProjectsController : ControllerBase
     {
+
 
         [HttpGet("GetCinemaProjects")]
         public IActionResult GetCinemaProjects()
