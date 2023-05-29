@@ -22,5 +22,9 @@ namespace TheDreamApi.BLL
         {
             return InboxServiceDAL.GetUserMessages(name);
         }
+        public static DataTable GetMessageById(int messageId)
+        {
+            return InboxServiceDAL.GetMessageById(messageId);
+        }
     }
 }

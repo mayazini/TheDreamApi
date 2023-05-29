@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Text.Json.Nodes;
 using System.Text.Json;
+using System.Xml.Linq;
 
 namespace TheDreamApi.DAL
 {
@@ -50,6 +51,13 @@ namespace TheDreamApi.DAL
         public static DataTable GetUserMessages(string name)
         {
             string query = $"select * from Inbox where recieverName=N'{name}'";
+            DataTable result = SQLHelper.SelectData(query);
+            return result;
+        }
+
+        public static DataTable GetMessageById(int messageId)
+        {
+            string query = $"select * from Inbox where id=N'{messageId}'";
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }

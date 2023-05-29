@@ -62,5 +62,33 @@ namespace TheDreamApi.Services
                 return StatusCode(500, new { error = "An error occurred." });
             }
         }
+
+        [HttpGet("GetMessage/{messageId}")]
+        public IActionResult GetMessage(int messageId)
+        {
+            try
+            {
+                // Retrieve the message from the database based on the messageId
+                // Replace this with your actual database query or logic
+                var message = InboxBLL.GetMessageById(messageId);
+
+                if (message == null)
+                {
+                    return NotFound(new { error = "Message not found" });
+                }
+
+                // Convert DataTable to a list of dictionaries
+                var rows = message.AsEnumerable()
+                    .Select(row => message.Columns.Cast<DataColumn>()
+                        .ToDictionary(column => column.ColumnName, column => row[column]));
+
+                // Return the serialized data
+                return Ok(rows);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred." });
+            }
+        }
     }
 }
