@@ -28,9 +28,27 @@ namespace TheDreamApi.DAL
             string projectName = (string)obj["projectName"];
             string description = (string)obj["description"];
             string creatorName = (string)obj["creatorName"];
-            string query = $"INSERT INTO CinemaProjects (projectName,description, CreatorName) VALUES ('{projectName}','{description}','{creatorName}')";
-            int result = SQLHelper.DoQuery(query);
-            if(result == 0) { return "didnt work"; }
+            var requirements = obj["requirements"];
+
+            // Iterate over the requirements and insert them into the database
+            foreach (var requirement in requirements)
+            {
+                string requirementName = (string)requirement["name"];
+                int requirementAmount = (int)requirement["amount"];
+
+                // Insert the requirement into the database
+                string query = $"INSERT INTO Requirements (projectName, requirementName, requirementAmount) VALUES ('{projectName}', '{requirementName}', {requirementAmount})";
+                int result = SQLHelper.DoQuery(query);
+
+                if (result == 0)
+                {
+                    return "Failed to insert requirement into the database";
+                }
+            }
+
+            string projectQuery = $"INSERT INTO CinemaProjects (projectName,description, CreatorName) VALUES ('{projectName}','{description}','{creatorName}')";
+            int projectResult = SQLHelper.DoQuery(projectQuery);
+            if(projectResult == 0) { return "didnt work"; }
             return "";
         }
     }

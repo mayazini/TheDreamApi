@@ -23,7 +23,7 @@ namespace TheDreamApi.DAL
                 if (check.Rows.Count != 0)
                 {
 
-                    string query = $"INSERT INTO Inbox (Message,SenderName, RecieverName,Time,Subject) VALUES ('{message}','{senderName}','{recieverName}','{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}',' {subject}')";
+                    string query = $"INSERT INTO Inbox (Message,SenderName, RecieverName,Time,Subject,IsTrash) VALUES ('{message}','{senderName}','{recieverName}','{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}',' {subject}','false')";
                     affected = SQLHelper.DoQuery(query);
 
                 }
