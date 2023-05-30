@@ -8,7 +8,7 @@ namespace TheDreamApi.DAL
     {
         public static DataTable GetCinemaProjects()
         {
-            string query = "select * from CinemaProjects";
+            string query = "SELECT p.*, r.requirementName, r.requirementAmount FROM CinemaProjects p JOIN Requirements r ON p.Id = r.projectId";
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
@@ -23,22 +23,30 @@ namespace TheDreamApi.DAL
 
         public static string CreateNewProject(JsonElement json)
         {
-
             dynamic obj = JsonNode.Parse(json.GetRawText());
             string projectName = (string)obj["projectName"];
             string description = (string)obj["description"];
             string creatorName = (string)obj["creatorName"];
             var requirements = obj["requirements"];
 
+            // Insert the project information into the CinemaProjects table
+            string projectQuery = $"INSERT INTO CinemaProjects (projectName, description, CreatorName) VALUES ('{projectName}', '{description}', '{creatorName}'); SELECT SCOPE_IDENTITY();";
+            int projectId = SQLHelper.SelectScalarToInt32(projectQuery);
+
+            if (projectId == 0)
+            {
+                return "Failed to insert project into the database";
+            }
+
             // Iterate over the requirements and insert them into the database
             foreach (var requirement in requirements)
             {
                 string requirementName = (string)requirement["name"];
-                int requirementAmount = (int)requirement["amount"];
+                int requirementAmount = Int32.Parse((string)requirement["amount"]);
 
-                // Insert the requirement into the database
-                string query = $"INSERT INTO Requirements (projectName, requirementName, requirementAmount) VALUES ('{projectName}', '{requirementName}', {requirementAmount})";
-                int result = SQLHelper.DoQuery(query);
+                // Insert the requirement into the database with the associated project ID
+                string requirementQuery = $"INSERT INTO Requirements (projectId, Description, Amount) VALUES ({projectId}, '{requirementName}', {requirementAmount})";
+                int result = SQLHelper.DoQuery(requirementQuery);
 
                 if (result == 0)
                 {
@@ -46,11 +54,9 @@ namespace TheDreamApi.DAL
                 }
             }
 
-            string projectQuery = $"INSERT INTO CinemaProjects (projectName,description, CreatorName) VALUES ('{projectName}','{description}','{creatorName}')";
-            int projectResult = SQLHelper.DoQuery(projectQuery);
-            if(projectResult == 0) { return "didnt work"; }
             return "";
         }
+
     }
 
 
