@@ -43,7 +43,10 @@ namespace TheDreamApi.BLL
         {
             return InboxServiceDAL.GetTrashByName(userName);
         }
-
-
+        
+        public static bool MoveToTrash(int messageId)
+        {
+            return InboxServiceDAL.UpdateMessageIsTrash(messageId,true);
+        }
     }
 }

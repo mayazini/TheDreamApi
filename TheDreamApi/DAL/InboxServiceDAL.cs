@@ -51,14 +51,14 @@ namespace TheDreamApi.DAL
 
         public static DataTable GetUserMessages(string name)
         {
-            string query = $"select * from Inbox where recieverName=N'{name}'";
+            string query = $"select * from Inbox where recieverName=N'{name}' And IsTrash='false'";
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
 
         public static DataTable GetMessageById(int messageId)
         {
-            string query = $"select * from Inbox where id=N'{messageId}'";
+            string query = $"select * from Inbox where id=N'{messageId}' ";
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
@@ -72,7 +72,7 @@ namespace TheDreamApi.DAL
 
         public static DataTable GetTrashByName(string userName)
         {
-            string query = $"select * from Inbox where SenderName=N'{userName}' And IsTrash='true'";
+            string query = $"SELECT * FROM Inbox WHERE SenderName = N'{userName}' OR recieverName = N'{userName}' AND IsTrash = 'true'";
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
@@ -105,7 +105,7 @@ namespace TheDreamApi.DAL
             try
             {
                 // Retrieve the message from the database based on the messageId
-                string query = $"select * from Inbox where id=N'{messageId}' And IsTrash='false'";
+                string query = $"select * from Inbox where id=N'{messageId}'";
                 DataTable dt = SQLHelper.SelectData(query);
                 if (dt != null)
                 {
@@ -115,7 +115,7 @@ namespace TheDreamApi.DAL
                     inboxMsg.RecieverName = dt.Rows[0]["RecieverName"].ToString();
                     inboxMsg.Time = Convert.ToDateTime(dt.Rows[0]["Time"]);
                     inboxMsg.IsTrash = Convert.ToBoolean(dt.Rows[0]["IsTrash"]);
-
+                    inboxMsg.Message = (dt.Rows[0]["Message"]).ToString();
                     return inboxMsg;
                 }
                 else
@@ -134,13 +134,14 @@ namespace TheDreamApi.DAL
         private static bool DeleteMessageFromDatabase(int messageId)
         {
             // Delete the message from the database based on the messageId
-            string query = $"Delete *from Inbox where id= '{messageId}'";
+            string query = $"DELETE FROM Inbox WHERE id = '{messageId}'";
             int response = SQLHelper.DoQuery(query);
             return response > 0;// Return true if the deletion is successful, false otherwise
         }
 
-        //helper function
-        private static bool UpdateMessageIsTrash(int messageId, bool isTrash)
+        
+        //used in move to trash
+        public static bool UpdateMessageIsTrash(int messageId, bool isTrash)
         {
             // Update the IsTrash field of the message in the database based on the messageId
             string query = $" UPDATE Inbox SET IsTrash = '{isTrash}' WHERE Id = '{messageId}'";

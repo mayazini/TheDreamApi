@@ -131,6 +131,29 @@ namespace TheDreamApi.Services
             }
         }
 
+        [HttpPatch("MoveToTrash/{messageId}")]
+        public IActionResult MoveToTrash(int messageId)
+        {
+            try
+            {
+                // Delete the message from the inbox data table using the messageId
+                bool worked = InboxBLL.MoveToTrash(messageId);
+
+                if (worked)
+                {
+                    return Ok(new { message = "Message moved to trash successfully" });
+                }
+                else
+                {
+                    return NotFound(new { error = "Message not found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error and return a 500 Internal Server Error
+                return StatusCode(500, new { error = "An error occurred." });
+            }
+        }
 
         [HttpDelete("DeleteMessage/{messageId}")]
         public IActionResult DeleteMessage(int messageId)
