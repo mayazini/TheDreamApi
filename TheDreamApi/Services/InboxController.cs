@@ -4,6 +4,7 @@ using System.Data;
 using System.Text.Json.Nodes;
 using System.Text.Json;
 using TheDreamApi.BLL;
+using TheDreamApi.Models;
 
 namespace TheDreamApi.Services
 {
@@ -90,5 +91,107 @@ namespace TheDreamApi.Services
                 return StatusCode(500, new { error = "An error occurred." });
             }
         }
+
+
+
+        [HttpPost("GetSentMessages")]
+        public IActionResult GetSentMessagesByName(JsonElement value)
+        {
+            try
+            {
+                dynamic obj = JsonNode.Parse(value.GetRawText());
+                string username = (string)obj["username"];
+                var dt = InboxBLL.GetSentMessagesByName(username);
+                if (dt == null)
+                {
+                    return NotFound(new { error = "no messages" });
+                }
+
+                // Convert DataTable to a list of Inbox objects
+                List<Inbox> messages = dt.AsEnumerable()
+                .Select(row => new Inbox
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Message = Convert.ToString(row["Message"]),
+                    SenderName = Convert.ToString(row["SenderName"]),
+                    RecieverName = Convert.ToString(row["RecieverName"]),
+                    Time = Convert.ToDateTime(row["Time"]),
+                    Subject = Convert.ToString(row["Subject"]),
+                    IsTrash = Convert.ToBoolean(row["IsTrash"])
+                })
+                .ToList();
+
+                // Return the serialized data
+                return Ok(messages);
+            }
+            catch (Exception ex)
+            {
+                // Log the error and return a 500 Internal Server Error
+                return StatusCode(500, new { error = "An error occurred." });
+            }
+        }
+
+
+        [HttpDelete("DeleteMessage/{messageId}")]
+        public IActionResult DeleteMessage(int messageId)
+        {
+            try
+            {
+                // Delete the message from the inbox data table using the messageId
+                bool isDeleted = InboxBLL.DeleteMessage(messageId);
+
+                if (isDeleted)
+                {
+                    return Ok(new { message = "Message deleted successfully" });
+                }
+                else
+                {
+                    return NotFound(new { error = "Message not found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error and return a 500 Internal Server Error
+                return StatusCode(500, new { error = "An error occurred." });
+            }
+        }
+
+        [HttpPost("GetTrashByName")]
+        public IActionResult GetTrash(JsonElement value)
+        {
+            try
+            {
+                dynamic obj = JsonNode.Parse(value.GetRawText());
+                string username = (string)obj["username"];
+                var dt = InboxBLL.GetTrashByName(username);
+                if (dt == null)
+                {
+                    return NotFound(new { error = "no messages" });
+                }
+
+                // Convert DataTable to a list of Inbox objects
+                List<Inbox> messages = dt.AsEnumerable()
+                .Select(row => new Inbox
+                {
+                    Id = Convert.ToInt32(row["Id"]),
+                    Message = Convert.ToString(row["Message"]),
+                    SenderName = Convert.ToString(row["SenderName"]),
+                    RecieverName = Convert.ToString(row["RecieverName"]),
+                    Time = Convert.ToDateTime(row["Time"]),
+                    Subject = Convert.ToString(row["Subject"]),
+                    IsTrash = Convert.ToBoolean(row["IsTrash"])
+                })
+                .ToList();
+
+                // Return the serialized data
+                return Ok(messages);
+            }
+            catch (Exception ex)
+            {
+                // Log the error and return a 500 Internal Server Error
+                return StatusCode(500, new { error = "An error occurred." });
+            }
+        }
+
     }
 }

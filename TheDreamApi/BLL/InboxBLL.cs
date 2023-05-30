@@ -12,9 +12,16 @@ namespace TheDreamApi.BLL
 {
     public class InboxBLL
     {
+        
         public static string SendMessage(JsonElement json)
         {
             return InboxServiceDAL.SendMessage(json);
+
+        }
+
+        public static DataTable GetSentMessagesByName(string userName)
+        {
+            return InboxServiceDAL.SentMessagesByName(userName);
 
         }
 
@@ -26,5 +33,17 @@ namespace TheDreamApi.BLL
         {
             return InboxServiceDAL.GetMessageById(messageId);
         }
+
+        public static bool DeleteMessage(int messageId)
+        {
+            return InboxServiceDAL.DeleteMessage(messageId);
+        }
+
+        public static DataTable GetTrashByName(string userName)
+        {
+            return InboxServiceDAL.GetTrashByName(userName);
+        }
+
+
     }
 }

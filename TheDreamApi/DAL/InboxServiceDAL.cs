@@ -2,6 +2,7 @@
 using System.Text.Json.Nodes;
 using System.Text.Json;
 using System.Xml.Linq;
+using TheDreamApi.Models;
 
 namespace TheDreamApi.DAL
 {
@@ -61,5 +62,92 @@ namespace TheDreamApi.DAL
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
+
+        public static DataTable SentMessagesByName(string userName)
+        {
+            string query = $"select * from Inbox where SenderName=N'{userName}' And IsTrash='false'";
+            DataTable result = SQLHelper.SelectData(query);
+            return result;
+        }
+
+        public static DataTable GetTrashByName(string userName)
+        {
+            string query = $"select * from Inbox where SenderName=N'{userName}' And IsTrash='true'";
+            DataTable result = SQLHelper.SelectData(query);
+            return result;
+        }
+
+        public static bool DeleteMessage(int messageId)
+        {
+            // Retrieve the message from the database based on the messageId
+            Inbox message = GetInboxMessageById(messageId);
+
+            if (message != null)
+            {
+                if (message.IsTrash)
+                {
+                    // If the message is marked as trash, delete it from the database
+                    return DeleteMessageFromDatabase(messageId);
+                }
+                else
+                {
+                    // If the message is not marked as trash, update the IsTrash field to true
+                    return UpdateMessageIsTrash(messageId, true);
+                }
+            }
+
+            return false; // Message not found
+        }
+
+        //helper function
+        private static Inbox GetInboxMessageById(int messageId)
+        {
+            try
+            {
+                // Retrieve the message from the database based on the messageId
+                string query = $"select * from Inbox where id=N'{messageId}' And IsTrash='false'";
+                DataTable dt = SQLHelper.SelectData(query);
+                if (dt != null)
+                {
+                    Inbox inboxMsg = new Inbox();
+                    inboxMsg.Subject = dt.Rows[0]["Subject"].ToString();
+                    inboxMsg.SenderName = dt.Rows[0]["SenderName"].ToString();
+                    inboxMsg.RecieverName = dt.Rows[0]["RecieverName"].ToString();
+                    inboxMsg.Time = Convert.ToDateTime(dt.Rows[0]["Time"]);
+                    inboxMsg.IsTrash = Convert.ToBoolean(dt.Rows[0]["IsTrash"]);
+
+                    return inboxMsg;
+                }
+                else
+                {
+                    return null; // Message not found
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle and log any exceptions if necessary
+                return null; // Return null to indicate an error occurred
+            }
+        }
+
+        //helper function
+        private static bool DeleteMessageFromDatabase(int messageId)
+        {
+            // Delete the message from the database based on the messageId
+            string query = $"Delete *from Inbox where id= '{messageId}'";
+            int response = SQLHelper.DoQuery(query);
+            return response > 0;// Return true if the deletion is successful, false otherwise
+        }
+
+        //helper function
+        private static bool UpdateMessageIsTrash(int messageId, bool isTrash)
+        {
+            // Update the IsTrash field of the message in the database based on the messageId
+            string query = $" UPDATE Inbox SET IsTrash = '{isTrash}' WHERE Id = '{messageId}'";
+            int response = SQLHelper.DoQuery(query);
+            return response > 0;// Return true if the update is successful, false otherwise
+
+        }
+
     }
 }
