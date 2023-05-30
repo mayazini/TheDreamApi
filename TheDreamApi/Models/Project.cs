@@ -2,10 +2,10 @@
 {
     public class Project
     {
-        int ProjectId { get; set; }
-        string ProjectName { get; set; }
-        string Description { get; set; }
-        string CreatorName { get; set; }
-        List<Requirement> Requirments {get;set;}
+        public int ProjectId { get; set; }
+        public string ProjectName { get; set; }
+        public string Description { get; set; }
+        public string CreatorName { get; set; }
+        public List<Requirement> Requirements { get;set;}
 }
 }

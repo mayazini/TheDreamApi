@@ -8,7 +8,7 @@ namespace TheDreamApi.DAL
     {
         public static DataTable GetCinemaProjects()
         {
-            string query = "SELECT p.*, r.requirementName, r.requirementAmount FROM CinemaProjects p JOIN Requirements r ON p.Id = r.projectId";
+            string query = "SELECT p.*, r.Description AS RequirementDescription, r.Amount,r.ProjectId FROM CinemaProjects p JOIN Requirements r ON p.Id = r.projectId";
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
