@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Web;
+using TheDreamApi.Models;
 
 
 namespace TheDreamApi.DAL
@@ -35,21 +36,26 @@ namespace TheDreamApi.DAL
                 if (check.Rows.Count == 0)
                 {
 
-                    string query = $"INSERT INTO Users (email,username, password) VALUES ('{email}','{username}',' {password}')";
+                    string query = $"INSERT INTO Users (email, username, password) VALUES ('{email}', '{username}', '{password}')";
                     affected = SQLHelper.DoQuery(query);
+
+                    if (affected > 0)
+                    {
+                        // Insert the event into the Events table
+                        string eventQuery = $"INSERT INTO Events (EventType, Time, username) VALUES ('{EventTypes.createNewUser}','{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}','{username}')";
+                        affected = SQLHelper.DoQuery(eventQuery);
+
+                        return affected>0 ?"ok" : "error in the query";
+                    }
+                    else
+                    {
+                        return "error in the query";
+                    }
 
                 }
                 else
                 {
                     return ("username already taken");
-                }
-                if (affected > 0)
-                {
-                    return ("ok");
-                }
-                else
-                {
-                    return ("error in the query");
                 }
             }
             catch (Exception ex)

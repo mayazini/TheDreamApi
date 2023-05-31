@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using TheDreamApi.Models;
 
 namespace TheDreamApi.DAL
 {
@@ -51,6 +52,14 @@ namespace TheDreamApi.DAL
                 if (result == 0)
                 {
                     return "Failed to insert requirement into the database";
+                }
+                else
+                {
+                    // Insert the event into the Events table
+                    string eventQuery = $"INSERT INTO Events (EventType, Time,projectId) VALUES ('{EventTypes.createNewProject}','{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}','{projectId}')";
+                    result = SQLHelper.DoQuery(eventQuery);
+
+                    return result > 0 ? "" : "error in the query";
                 }
             }
 

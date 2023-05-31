@@ -69,5 +69,29 @@ namespace TheDreamApi.web_service
            catch(Exception ex) { return StatusCode(500, new { error = "An error occurred." }); }
 
         }
+
+        [HttpPut("Register")]
+        public IActionResult Register([FromBody] JsonElement value)
+        {
+            try
+            {
+                string response = UsersBLL.Register(value);
+                if (response == "ok")
+                {
+                    return Ok();
+                }
+                if (response == "username already taken")
+                {
+                    return NotFound(new { error = "Username taken." });
+                }
+                else
+                {
+
+                    return StatusCode(500, new { error = response });
+                }
+            }
+            catch (Exception ex) { return StatusCode(500, new { error = "An error occurred." }); }
+
+        }
     }
 }
