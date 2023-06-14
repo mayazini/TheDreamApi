@@ -14,17 +14,16 @@ namespace TheDreamApi.Services
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CinemaProjectsController : ControllerBase
+    public class ProjectsController : ControllerBase
     {
 
-
-        [HttpGet("GetCinemaProjects")]
-        public IActionResult GetCinemaProjects()
+        [HttpGet("GetProjects/{spaceName}/{creatorName}")]
+        public IActionResult GetProjectsBySpaceAndName(string spaceName, string creatorName)
         {
             try
             {
                 // Get the user data
-                var dt = CinemaProjectsServiceBLL.GetCinemaProjects();
+                var dt = ProjectsServiceBLL.GetProjectsBySpaceAndName(spaceName, creatorName);
                 if (dt == null)
                 {
                     return NotFound(new { error = "no projects" });
@@ -55,40 +54,13 @@ namespace TheDreamApi.Services
             }
         }
 
-        [HttpPost("GetCinemaProjectsByName")]
-        public IActionResult GetCinemaProjectsByName(JsonElement value)
+        [HttpGet("GetProjects/{spaceName}")]
+        public IActionResult GetProjectsBySpace(string spaceName)
         {
             try
             {
                 // Get the user data
-                var dt = CinemaProjectsServiceBLL.GetCinemaProjectsByName(value);
-                if (dt == null)
-                {
-                    return NotFound(new { error = "no projects" });
-                }
-
-                // Convert DataTable to a list of dictionaries
-                var rows = dt.AsEnumerable()
-                    .Select(row => dt.Columns.Cast<DataColumn>()
-                        .ToDictionary(column => column.ColumnName, column => row[column]));
-
-                // Return the serialized data
-                return Ok(rows);
-            }
-            catch (Exception ex)
-            {
-                // Log the error and return a 500 Internal Server Error
-                return StatusCode(500, new { error = "An error occurred." });
-            }
-        }
-
-        [HttpGet("GetRetailProjects")]
-        public IActionResult GetRetailProjects()
-        {
-            try
-            {
-                // Get the user data
-                var dt = CinemaProjectsServiceBLL.GetCinemaProjects();
+                var dt = ProjectsServiceBLL.GetProjectsBySpace(spaceName);
                 if (dt == null)
                 {
                     return NotFound(new { error = "no projects" });
@@ -119,40 +91,14 @@ namespace TheDreamApi.Services
             }
         }
 
-        [HttpPost("GetRetailProjectsByName")]
-        public IActionResult GetRetailProjectsByName(JsonElement value)
-        {
-            try
-            {
-                // Get the user data
-                var dt = CinemaProjectsServiceBLL.GetCinemaProjectsByName(value);
-                if (dt == null)
-                {
-                    return NotFound(new { error = "no projects" });
-                }
-
-                // Convert DataTable to a list of dictionaries
-                var rows = dt.AsEnumerable()
-                    .Select(row => dt.Columns.Cast<DataColumn>()
-                        .ToDictionary(column => column.ColumnName, column => row[column]));
-
-                // Return the serialized data
-                return Ok(rows);
-            }
-            catch (Exception ex)
-            {
-                // Log the error and return a 500 Internal Server Error
-                return StatusCode(500, new { error = "An error occurred." });
-            }
-        }
-
+        
 
         [HttpPut("CreateNewProject")]
         public IActionResult CreateNewProject([FromBody] JsonElement value)
         {
             try
             {
-                string response = CinemaProjectsServiceBLL.CreateNewCinemaProject(value);
+                string response = ProjectsServiceBLL.CreateNewProject(value);
                 if (response == "")
                 {
                     return Ok();

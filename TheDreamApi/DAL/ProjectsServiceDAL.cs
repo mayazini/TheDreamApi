@@ -5,24 +5,29 @@ using TheDreamApi.Models;
 
 namespace TheDreamApi.DAL
 {
-    public class CinemaProjectsServiceDAL
+    public class ProjectsServiceDAL
     {
-        public static DataTable GetCinemaProjects()
+        //public static DataTable GetCinemaProjects()
+        //{
+        //    string query = "SELECT p.*, r.Description AS RequirementDescription, r.Amount, r.ProjectId FROM Projects p JOIN Requirements r ON p.Id = r.ProjectId WHERE p.SpaceId = (SELECT Id FROM Spaces WHERE Space = 'cinema')";
+        //    DataTable result = SQLHelper.SelectData(query);
+        //    return result;
+        //}
+        public static DataTable GetProjectsBySpace(string spaceName)
         {
-            string query = "SELECT p.*, r.Description AS RequirementDescription, r.Amount, r.ProjectId FROM Projects p JOIN Requirements r ON p.Id = r.ProjectId WHERE p.SpaceId = (SELECT Id FROM Spaces WHERE Space = 'cinema')";
-            DataTable result = SQLHelper.SelectData(query);
-            return result;
-        }
-        public static DataTable GetCinemaProjectsByName(JsonElement json)
-        {
-            dynamic obj = JsonNode.Parse(json.GetRawText());
-            string creatorName = (string)obj["CreatorName"];
-            string query = $"SELECT p.*, r.Description AS RequirementDescription, r.Amount, r.ProjectId FROM Projects p JOIN Requirements r ON p.Id = r.ProjectId WHERE p.SpaceId = (SELECT Id FROM Spaces WHERE Space = 'cinema') AND p.CreatorName = '{creatorName}'";
+            string query = $"SELECT p.*, r.Description AS RequirementDescription, r.Amount, r.ProjectId,r.Id FROM Projects p JOIN Requirements r ON p.Id = r.ProjectId WHERE p.SpaceId = (SELECT Id FROM Spaces WHERE Space = '{spaceName}')";
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
 
-        public static string CreateCinemaNewProject(JsonElement json)
+        public static DataTable GetCinemaProjectsByName(string spaceName, string creatorName)
+        {
+            string query = $"SELECT p.*, r.Description AS RequirementDescription, r.Amount, r.ProjectId FROM Projects p JOIN Requirements r ON p.Id = r.ProjectId WHERE p.SpaceId = (SELECT Id FROM Spaces WHERE Space = '{spaceName}') AND p.CreatorName = '{creatorName}'";
+            DataTable result = SQLHelper.SelectData(query);
+            return result;
+        }
+
+        public static string CreateNewProject(JsonElement json)
         {
             dynamic obj = JsonNode.Parse(json.GetRawText());
             string projectName = (string)obj["projectName"];
@@ -48,7 +53,7 @@ namespace TheDreamApi.DAL
                 // Insert the requirement into the database with the associated project ID
                 bool worked = RequirementsDAL.CreateNewRequirment(projectId, requirementName, requirementAmount);
 
-                if (worked)
+                if (!worked)
                 {
                     return "Failed to insert requirement into the database";
                 }

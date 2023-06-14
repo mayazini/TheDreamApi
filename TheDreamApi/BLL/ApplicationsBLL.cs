@@ -1,16 +1,17 @@
-﻿namespace TheDreamApi.BLL
+﻿using System.Text.Json;
+using TheDreamApi.DAL;
+using TheDreamApi.Models;
+
+namespace TheDreamApi.BLL
 {
     public class ApplicationsBLL
     {
-        public static void SaveResumeFile(Stream resumeStream, int projectId, string username)
+        public static string Apply(ApplicationData applicationData)
         {
-            string fileName = $"{projectId}_{username}_resume.pdf"; // Generate a unique file name
-            string filePath = Path.Combine("Users_Resumes", fileName); // Specify the directory where resumes will be stored
+            return ApplicationsServiceDAL.Apply(applicationData);
 
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                resumeStream.CopyTo(fileStream);
-            }
         }
+
+        
     }
 }
