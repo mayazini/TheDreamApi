@@ -4,7 +4,6 @@ using TheDreamApi.Models;
 using TheDreamApi.BLL;
 using System.Diagnostics;
 using System.Reflection.Metadata;
-using TheDreamApi.BLL;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -31,7 +30,7 @@ namespace TheDreamApi.Services
                     {
                         Description = (string)requirementObj["description"],
                         Amount = (int)requirementObj["amount"],
-                        ProjectId = (int)requirementObj["projectId"]
+                        Id = (int)requirementObj["id"]
                     };
                     application.Requirement = requirement;
 
@@ -40,7 +39,7 @@ namespace TheDreamApi.Services
                     application.Email = (string)obj["email"];
                     application.ProjectId = (int)(obj["projectId"]);
                     application.Message = (string)obj["message"];
-                    application.UserName = (string)obj["userName"];
+                    application.UserName = (string)obj["ApplicantName"];
                 }
                 catch (Exception ex)
                 {

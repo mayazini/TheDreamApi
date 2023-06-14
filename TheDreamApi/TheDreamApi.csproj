@@ -16,7 +16,7 @@
   <ItemGroup>
     <Folder Include="Users_Resumes\" />
     <Folder Include="Uploads\" />
-    <Folder Include="wwwroot\Users\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

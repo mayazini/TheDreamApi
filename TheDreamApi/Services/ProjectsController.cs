@@ -77,7 +77,9 @@ namespace TheDreamApi.Services
                 .Select(r => new Requirement
                 {
                     Description = r.Field<string>("RequirementDescription"),
-                    Amount = r.Field<int>("Amount")
+                    Amount = r.Field<int>("Amount"),
+                    ProjectId = row.Field<int>("ProjectId"),
+                    Id = r.Field<int>("RequirementId")
                 })
                 .ToList()
                 });

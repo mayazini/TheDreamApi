@@ -15,7 +15,7 @@ namespace TheDreamApi.DAL
         //}
         public static DataTable GetProjectsBySpace(string spaceName)
         {
-            string query = $"SELECT p.*, r.Description AS RequirementDescription, r.Amount, r.ProjectId,r.Id FROM Projects p JOIN Requirements r ON p.Id = r.ProjectId WHERE p.SpaceId = (SELECT Id FROM Spaces WHERE Space = '{spaceName}')";
+            string query = $"SELECT p.*, r.Description AS RequirementDescription, r.Amount, r.ProjectId,r.Id AS RequirementId FROM Projects p JOIN Requirements r ON p.Id = r.ProjectId WHERE p.SpaceId = (SELECT Id FROM Spaces WHERE Space = '{spaceName}')";
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
