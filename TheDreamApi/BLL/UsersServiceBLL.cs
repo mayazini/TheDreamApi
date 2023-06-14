@@ -10,12 +10,12 @@ using TheDreamApi.Models;
 
 namespace TheDreamApi.BLL
 {
-    public class UsersBLL
+    public class UsersServiceBLL
     {
 
         public static DataTable GetUserDataBLL(string username, string password)
         {
-            DataTable data = UserServiceDAL.GetUserDataDAL(username, password);
+            DataTable data = UserServiceDAL.GetUserDataByNameDAL(username, password);
 
             if (data == null || data.Rows.Count == 0)// check if login incorrect
             {
@@ -29,6 +29,12 @@ namespace TheDreamApi.BLL
             return UserServiceDAL.Register(json);
 
         }
+        public static DataTable GetAllUsers()
+        {
+            return UserServiceDAL.GetAllUsers();
 
+        }
+
+        
     }
 }

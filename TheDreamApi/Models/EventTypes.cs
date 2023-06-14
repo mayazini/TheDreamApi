@@ -3,8 +3,6 @@
     public enum EventTypes
     {
         createNewProject,
-        createNewUser,
-        ViewProject,
-        Apply
+        createNewUser
     }
 }

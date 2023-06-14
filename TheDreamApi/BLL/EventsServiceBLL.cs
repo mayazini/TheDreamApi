@@ -3,12 +3,12 @@ using TheDreamApi.DAL;
 
 namespace TheDreamApi.BLL
 {
-    public class EventsBLL
+    public class EventsServiceBLL
     {
 
         public static DataTable GetCharts()
         {
-           return EventsDAL.GetCharts();
+           return EventsServiceDAL.GetCharts();
         }
     }
 }

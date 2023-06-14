@@ -2,7 +2,7 @@
 
 namespace TheDreamApi.DAL
 {
-    public class EventsDAL
+    public class EventsServiceDAL
     {
 
         public static DataTable GetCharts()

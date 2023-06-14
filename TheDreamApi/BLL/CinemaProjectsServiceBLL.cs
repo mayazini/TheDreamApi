@@ -4,11 +4,11 @@ using TheDreamApi.DAL;
 
 namespace TheDreamApi.BLL
 {
-    public class CinemaProjectsBLL
+    public class CinemaProjectsServiceBLL
     { 
         public static DataTable GetCinemaProjects()
         {
-            DataTable data = CinemaProjectsDAL.GetCinemaProjects();
+            DataTable data = CinemaProjectsServiceDAL.GetCinemaProjects();
 
             if (data == null || data.Rows.Count == 0)// check if login incorrect
             {
@@ -18,7 +18,7 @@ namespace TheDreamApi.BLL
         }
         public static DataTable GetCinemaProjectsByName(JsonElement json)
         {
-            DataTable data = CinemaProjectsDAL.GetCinemaProjectsByName(json);
+            DataTable data = CinemaProjectsServiceDAL.GetCinemaProjectsByName(json);
 
             if (data == null || data.Rows.Count == 0)// check if login incorrect
             {
@@ -26,9 +26,9 @@ namespace TheDreamApi.BLL
             }
             return data;
         }
-        public static string CreateNewProject(JsonElement json)
+        public static string CreateNewCinemaProject(JsonElement json)
         {
-            string response = CinemaProjectsDAL.CreateNewProject(json);
+            string response = CinemaProjectsServiceDAL.CreateCinemaNewProject(json);
             return response;
         }
 

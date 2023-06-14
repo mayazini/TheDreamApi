@@ -16,7 +16,7 @@ namespace TheDreamApi.Services
         {
             try
             {
-                DataTable dt = EventsBLL.GetCharts();
+                DataTable dt = EventsServiceBLL.GetCharts();
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     // Prepare the chart data

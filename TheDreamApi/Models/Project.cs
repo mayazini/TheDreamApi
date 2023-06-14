@@ -7,5 +7,7 @@
         public string Description { get; set; }
         public string CreatorName { get; set; }
         public List<Requirement> Requirements { get;set;}
-}
+
+        public int SpaceId { get; set; }
+    }
 }

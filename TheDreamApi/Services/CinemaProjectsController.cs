@@ -24,7 +24,7 @@ namespace TheDreamApi.Services
             try
             {
                 // Get the user data
-                var dt = CinemaProjectsBLL.GetCinemaProjects();
+                var dt = CinemaProjectsServiceBLL.GetCinemaProjects();
                 if (dt == null)
                 {
                     return NotFound(new { error = "no projects" });
@@ -61,7 +61,71 @@ namespace TheDreamApi.Services
             try
             {
                 // Get the user data
-                var dt = CinemaProjectsBLL.GetCinemaProjectsByName(value);
+                var dt = CinemaProjectsServiceBLL.GetCinemaProjectsByName(value);
+                if (dt == null)
+                {
+                    return NotFound(new { error = "no projects" });
+                }
+
+                // Convert DataTable to a list of dictionaries
+                var rows = dt.AsEnumerable()
+                    .Select(row => dt.Columns.Cast<DataColumn>()
+                        .ToDictionary(column => column.ColumnName, column => row[column]));
+
+                // Return the serialized data
+                return Ok(rows);
+            }
+            catch (Exception ex)
+            {
+                // Log the error and return a 500 Internal Server Error
+                return StatusCode(500, new { error = "An error occurred." });
+            }
+        }
+
+        [HttpGet("GetRetailProjects")]
+        public IActionResult GetRetailProjects()
+        {
+            try
+            {
+                // Get the user data
+                var dt = CinemaProjectsServiceBLL.GetCinemaProjects();
+                if (dt == null)
+                {
+                    return NotFound(new { error = "no projects" });
+                }
+
+                var projects = dt.AsEnumerable().Select(row => new Project
+                {
+                    ProjectId = row.Field<int>("Id"),
+                    ProjectName = row.Field<string>("ProjectName"),
+                    Description = row.Field<string>("Description"),
+                    CreatorName = row.Field<string>("CreatorName"),
+                    Requirements = dt.AsEnumerable()
+                .Where(r => r.Field<int>("ProjectId") == row.Field<int>("Id"))
+                .Select(r => new Requirement
+                {
+                    Description = r.Field<string>("RequirementDescription"),
+                    Amount = r.Field<int>("Amount")
+                })
+                .ToList()
+                });
+                // Return the serialized data
+                return Ok(projects);
+            }
+            catch (Exception ex)
+            {
+                // Log the error and return a 500 Internal Server Error
+                return StatusCode(500, new { error = "An error occurred." });
+            }
+        }
+
+        [HttpPost("GetRetailProjectsByName")]
+        public IActionResult GetRetailProjectsByName(JsonElement value)
+        {
+            try
+            {
+                // Get the user data
+                var dt = CinemaProjectsServiceBLL.GetCinemaProjectsByName(value);
                 if (dt == null)
                 {
                     return NotFound(new { error = "no projects" });
@@ -88,7 +152,7 @@ namespace TheDreamApi.Services
         {
             try
             {
-                string response = CinemaProjectsBLL.CreateNewProject(value);
+                string response = CinemaProjectsServiceBLL.CreateNewCinemaProject(value);
                 if (response == "")
                 {
                     return Ok();

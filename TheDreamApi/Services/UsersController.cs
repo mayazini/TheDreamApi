@@ -25,7 +25,7 @@ namespace TheDreamApi.web_service
                 string password = (string)obj["password"];
 
                 // Get the user data
-                var dt = UsersBLL.GetUserDataBLL(username, password);
+                var dt = UsersServiceBLL.GetUserDataBLL(username, password);
                 if (dt == null)
                 {
                     return NotFound(new { error = "User not found." });
@@ -51,7 +51,7 @@ namespace TheDreamApi.web_service
         {
             try
             {
-                string response = UsersBLL.Register(value);
+                string response = UsersServiceBLL.Register(value);
                 if (response == "ok")
                 {
                     return Ok();
@@ -70,25 +70,24 @@ namespace TheDreamApi.web_service
 
         }
 
-        [HttpPut("Register")]
-        public IActionResult Register([FromBody] JsonElement value)
+        [HttpGet("GetAllUsers")]
+        public IActionResult GetAllUsers()
         {
             try
             {
-                string response = UsersBLL.Register(value);
-                if (response == "ok")
+                var dt = UsersServiceBLL.GetAllUsers();
+                if (dt == null)
                 {
-                    return Ok();
+                    return NotFound(new { error = "User not found." });
                 }
-                if (response == "username already taken")
-                {
-                    return NotFound(new { error = "Username taken." });
-                }
-                else
-                {
 
-                    return StatusCode(500, new { error = response });
-                }
+                // Convert DataTable to a list of dictionaries
+                var rows = dt.AsEnumerable()
+                    .Select(row => dt.Columns.Cast<DataColumn>()
+                        .ToDictionary(column => column.ColumnName, column => row[column]));
+
+                // Return the serialized data
+                return Ok(rows);
             }
             catch (Exception ex) { return StatusCode(500, new { error = "An error occurred." }); }
 

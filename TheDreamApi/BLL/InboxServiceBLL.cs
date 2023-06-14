@@ -10,7 +10,7 @@ using TheDreamApi.Models;
 
 namespace TheDreamApi.BLL
 {
-    public class InboxBLL
+    public class InboxServiceBLL
     {
         
         public static string SendMessage(JsonElement json)

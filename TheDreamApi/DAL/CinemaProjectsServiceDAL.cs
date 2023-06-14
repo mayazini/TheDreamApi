@@ -5,11 +5,11 @@ using TheDreamApi.Models;
 
 namespace TheDreamApi.DAL
 {
-    public class CinemaProjectsDAL
+    public class CinemaProjectsServiceDAL
     {
         public static DataTable GetCinemaProjects()
         {
-            string query = "SELECT p.*, r.Description AS RequirementDescription, r.Amount,r.ProjectId FROM CinemaProjects p JOIN Requirements r ON p.Id = r.projectId";
+            string query = "SELECT p.*, r.Description AS RequirementDescription, r.Amount, r.ProjectId FROM Projects p JOIN Requirements r ON p.Id = r.ProjectId WHERE p.SpaceId = (SELECT Id FROM Spaces WHERE Space = 'cinema')";
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
@@ -17,12 +17,12 @@ namespace TheDreamApi.DAL
         {
             dynamic obj = JsonNode.Parse(json.GetRawText());
             string creatorName = (string)obj["CreatorName"];
-            string query = "select * from CinemaProjects where CreatorName = '" + creatorName + "'";
+            string query = $"SELECT p.*, r.Description AS RequirementDescription, r.Amount, r.ProjectId FROM Projects p JOIN Requirements r ON p.Id = r.ProjectId WHERE p.SpaceId = (SELECT Id FROM Spaces WHERE Space = 'cinema') AND p.CreatorName = '{creatorName}'";
             DataTable result = SQLHelper.SelectData(query);
             return result;
         }
 
-        public static string CreateNewProject(JsonElement json)
+        public static string CreateCinemaNewProject(JsonElement json)
         {
             dynamic obj = JsonNode.Parse(json.GetRawText());
             string projectName = (string)obj["projectName"];
@@ -31,7 +31,7 @@ namespace TheDreamApi.DAL
             var requirements = obj["requirements"];
 
             // Insert the project information into the CinemaProjects table
-            string projectQuery = $"INSERT INTO CinemaProjects (projectName, description, CreatorName) VALUES ('{projectName}', '{description}', '{creatorName}'); SELECT SCOPE_IDENTITY();";
+            string projectQuery = $"INSERT INTO Projects (projectName, description, CreatorName, SpaceId) VALUES ('{projectName}', '{description}', '{creatorName}', (SELECT Id FROM Spaces WHERE Space = 'cinema')); SELECT SCOPE_IDENTITY();";
             int projectId = SQLHelper.SelectScalarToInt32(projectQuery);
 
             if (projectId == 0)
@@ -46,18 +46,17 @@ namespace TheDreamApi.DAL
                 int requirementAmount = Int32.Parse((string)requirement["amount"]);
 
                 // Insert the requirement into the database with the associated project ID
-                string requirementQuery = $"INSERT INTO Requirements (projectId, Description, Amount) VALUES ({projectId}, '{requirementName}', {requirementAmount})";
-                int result = SQLHelper.DoQuery(requirementQuery);
+                bool worked = RequirementsDAL.CreateNewRequirment(projectId, requirementName, requirementAmount);
 
-                if (result == 0)
+                if (worked)
                 {
                     return "Failed to insert requirement into the database";
                 }
                 else
                 {
                     // Insert the event into the Events table
-                    string eventQuery = $"INSERT INTO Events (EventType, Time,projectId) VALUES ('{EventTypes.createNewProject}','{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}','{projectId}')";
-                    result = SQLHelper.DoQuery(eventQuery);
+                    string eventQuery = $"INSERT INTO Events (EventType, Time, projectId) VALUES ('{EventTypes.createNewProject}', '{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}', '{projectId}')";
+                    int result = SQLHelper.DoQuery(eventQuery);
 
                     return result > 0 ? "" : "error in the query";
                 }
@@ -65,6 +64,7 @@ namespace TheDreamApi.DAL
 
             return "";
         }
+
 
     }
 

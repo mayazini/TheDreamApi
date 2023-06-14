@@ -14,7 +14,7 @@ namespace TheDreamApi.DAL
 {
     public class UserServiceDAL
     {
-        public static DataTable GetUserDataDAL(string username, string password)
+        public static DataTable GetUserDataByNameDAL(string username, string password)
         {
             string query = "select * from Users Where userName = N'"+ username + "' AND password=N'"+ password + "'";
             DataTable result = SQLHelper.SelectData(query);
@@ -63,5 +63,12 @@ namespace TheDreamApi.DAL
                 return ("unkown error");
             }
         }
+        public static DataTable GetAllUsers()
+        {
+            string query = "select * from Users";
+            DataTable result = SQLHelper.SelectData(query);
+            return result;
+        }
+        
     }
 }

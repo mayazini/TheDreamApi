@@ -17,7 +17,7 @@ namespace TheDreamApi.Services
         {
             try
             {
-                string response = InboxBLL.SendMessage(value);
+                string response = InboxServiceBLL.SendMessage(value);
                 if (response == "ok")
                 {
                     return Ok();
@@ -43,7 +43,7 @@ namespace TheDreamApi.Services
             {
                 dynamic obj = JsonNode.Parse(value.GetRawText());
                 string username = (string)obj["username"];
-                var dt = InboxBLL.GetUserMessages(username);
+                var dt = InboxServiceBLL.GetUserMessages(username);
                 if (dt == null)
                 {
                     return NotFound(new { error = "no projects" });
@@ -71,7 +71,7 @@ namespace TheDreamApi.Services
             {
                 // Retrieve the message from the database based on the messageId
                 // Replace this with your actual database query or logic
-                var message = InboxBLL.GetMessageById(messageId);
+                var message = InboxServiceBLL.GetMessageById(messageId);
 
                 if (message == null)
                 {
@@ -101,7 +101,7 @@ namespace TheDreamApi.Services
             {
                 dynamic obj = JsonNode.Parse(value.GetRawText());
                 string username = (string)obj["username"];
-                var dt = InboxBLL.GetSentMessagesByName(username);
+                var dt = InboxServiceBLL.GetSentMessagesByName(username);
                 if (dt == null)
                 {
                     return NotFound(new { error = "no messages" });
@@ -137,7 +137,7 @@ namespace TheDreamApi.Services
             try
             {
                 // Delete the message from the inbox data table using the messageId
-                bool worked = InboxBLL.MoveToTrash(messageId);
+                bool worked = InboxServiceBLL.MoveToTrash(messageId);
 
                 if (worked)
                 {
@@ -161,7 +161,7 @@ namespace TheDreamApi.Services
             try
             {
                 // Delete the message from the inbox data table using the messageId
-                bool isDeleted = InboxBLL.DeleteMessage(messageId);
+                bool isDeleted = InboxServiceBLL.DeleteMessage(messageId);
 
                 if (isDeleted)
                 {
@@ -186,7 +186,7 @@ namespace TheDreamApi.Services
             {
                 dynamic obj = JsonNode.Parse(value.GetRawText());
                 string username = (string)obj["username"];
-                var dt = InboxBLL.GetTrashByName(username);
+                var dt = InboxServiceBLL.GetTrashByName(username);
                 if (dt == null)
                 {
                     return NotFound(new { error = "no messages" });
