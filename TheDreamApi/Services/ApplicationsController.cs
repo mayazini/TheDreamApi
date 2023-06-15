@@ -152,7 +152,7 @@ namespace TheDreamApi.Services
         public IActionResult Download(string userName,string resumeFileName)
         {
             // Get the file path
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", userName, resumeFileName);
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","Users", userName,"Resume", resumeFileName);
 
             // Check if file exists
             if (!System.IO.File.Exists(path))
