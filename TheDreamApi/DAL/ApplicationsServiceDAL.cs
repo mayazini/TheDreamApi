@@ -27,6 +27,14 @@ namespace TheDreamApi.DAL
             }
 
         }
+
+        public static DataTable GetApplicantsByProject(int projectId)
+        {
+            string query = $"SELECT A.*, R.Description AS ReqDescription FROM Applications A INNER JOIN Requirements R ON A.RequirementId = R.Id WHERE A.ProjectId = '{projectId}'";
+            DataTable dt = SQLHelper.SelectData(query);
+            return dt;
+
+        }
     }
 
 }

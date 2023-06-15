@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Data;
+using System.Text.Json;
 using TheDreamApi.DAL;
 using TheDreamApi.Models;
 
@@ -11,7 +12,11 @@ namespace TheDreamApi.BLL
             return ApplicationsServiceDAL.Apply(applicationData);
 
         }
+        public static DataTable GetApplicantsByProject(int projectId)
+        {
+            return ApplicationsServiceDAL.GetApplicantsByProject(projectId);
 
-        
+        }
+
     }
 }
