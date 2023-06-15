@@ -7,7 +7,7 @@ namespace TheDreamApi.DAL
 
         public static DataTable GetCharts()
         {
-            string query = "SELECT EventType, CONVERT(DATE, Time) AS EventDate, COUNT(*) AS EventCount\r\nFROM Events\r\nWHERE Time >= CONVERT(DATE, GETDATE()) AND Time <= DATEADD(MONTH, 1, GETDATE())\r\nGROUP BY EventType, CONVERT(DATE, Time)";
+            string query = "SELECT EventType, CONVERT(DATE, Time) AS EventDate, COUNT(*) AS EventCount\r\nFROM Events\r\nWHERE Time >= DATEADD(MONTH, -1, GETDATE()) AND Time < GETDATE()\r\nGROUP BY EventType, CONVERT(DATE, Time)\r\nORDER BY EventDate ASC";
             DataTable dt = SQLHelper.SelectData(query);
             return dt;
         }

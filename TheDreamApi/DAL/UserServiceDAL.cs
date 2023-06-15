@@ -36,7 +36,7 @@ namespace TheDreamApi.DAL
                 if (check.Rows.Count == 0)
                 {
 
-                    string query = $"INSERT INTO Users (email, username, password) VALUES ('{email}', '{username}', '{password}')";
+                    string query = $"INSERT INTO Users (email, username, password,IsAdmin) VALUES ('{email}', '{username}', '{password}','false')";
                     affected = SQLHelper.DoQuery(query);
 
                     if (affected > 0)
