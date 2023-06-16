@@ -70,8 +70,11 @@ namespace TheDreamApi.Services
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
-            }
-
+                if (!System.IO.File.Exists(folderPath))
+                {
+                    return NotFound();
+                }
+            } 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
@@ -126,47 +129,6 @@ namespace TheDreamApi.Services
                 return StatusCode(500, new { error = "An error occurred while retrieving applicants." });
             }
         }
-    
-        //GetApplicantsByProject with the application data class
-        //[HttpGet("GetApplicantsByProject/{projectId}")]
-        //public async Task<IActionResult> GetApplicantsByProject(int projectId)
-        //{
-        //    try
-        //    {
-        //        DataTable dt = ApplicationsBLL.GetApplicantsByProject(projectId);
-        //        if (dt == null)
-        //        {
-        //            return NotFound(new { error = "No applications found for the project." });
-        //        }
-
-        //        // Convert DataTable to a list of ApplicationData objects
-        //        List<ApplicationData> applicants = dt.AsEnumerable()
-        //            .Select(row => new ApplicationData
-        //            {
-        //                ProjectId = Convert.ToInt32(row["ProjectId"]),
-        //                UserName = Convert.ToString(row["UserName"]),
-        //                Email = Convert.ToString(row["Email"]),
-        //                Message = Convert.ToString(row["Message"]),
-        //                ResumePath = Convert.ToString(row["ResumePath"]),
-        //                Requirement = new Requirement
-        //                {
-        //                    Description = Convert.ToString(row["Description"]),
-        //                    Amount = Convert.ToInt32(row["Amount"]),
-        //                    Id = Convert.ToInt32(row["RequirementId"])
-        //                },
-        //                Status = Convert.ToString(row["Status"])
-        //            })
-        //            .ToList();
-
-        //        // Return a success response with the list of applicants
-        //        return Ok(applicants);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Handle any errors that occur during the operation
-        //        return StatusCode(500, new { error = "An error occurred while retrieving applicants." });
-        //    }
-        //}
 
         [HttpGet("DownloadResume/{userName}/{resumeFileName}")]
         public IActionResult Download(string userName,string resumeFileName)

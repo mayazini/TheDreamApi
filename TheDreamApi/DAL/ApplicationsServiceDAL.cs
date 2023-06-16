@@ -9,7 +9,7 @@ namespace TheDreamApi.DAL
         {
             try
             {
-                string query = $"INSERT INTO Applications (RequirementId, Status, ProjectId,Username,Message,Email,ResumePath) VALUES ('{applicationData.Requirement.Id}', 'Pending', '{applicationData.ProjectId}','{applicationData.UserName}','{applicationData.Message}','{applicationData.Email}',N'{applicationData.ResumePath}')";
+                string query = "exec spInsertApplication @requirementId='" + applicationData.Requirement.Id + "', @projectId='" + applicationData.ProjectId + "',@username='" + applicationData.UserName + "',@message='" + applicationData.Message + "',@email='" + applicationData.Email + "',@resumePath='" + applicationData.ResumePath+"'";
                 int affected = SQLHelper.DoQuery(query);
 
                 if (affected > 0)
@@ -30,10 +30,17 @@ namespace TheDreamApi.DAL
 
         public static DataTable GetApplicantsByProject(int projectId)
         {
-            string query = $"SELECT A.*, R.Description AS ReqDescription FROM Applications A INNER JOIN Requirements R ON A.RequirementId = R.Id WHERE A.ProjectId = '{projectId}'";
+            string query = "exec GetApplicantsByProject " + projectId;
             DataTable dt = SQLHelper.SelectData(query);
             return dt;
 
+        }
+
+        public static bool UpdateApplicationStatus(int applicationId, string status)
+        {
+            string query ="exec spUpdateApplicationStatus "+applicationId +","+status;
+            int response = SQLHelper.DoQuery(query);
+            return response==1;
         }
     }
 
