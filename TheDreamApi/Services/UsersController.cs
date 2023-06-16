@@ -78,23 +78,38 @@ namespace TheDreamApi.web_service
         {
             try
             {
-                var dt = UsersServiceBLL.GetAllUsers();
-                if (dt == null)
+                List<User> users = UsersServiceBLL.GetAllUsers();
+                if (users == null)
                 {
                     return NotFound(new { error = "User not found." });
                 }
-
-                // Convert DataTable to a list of dictionaries
-                var rows = dt.AsEnumerable()
-                    .Select(row => dt.Columns.Cast<DataColumn>()
-                        .ToDictionary(column => column.ColumnName, column => row[column]));
-
                 // Return the serialized data
-                return Ok(rows);
+                return Ok(users);
             }
             catch (Exception ex) { return StatusCode(500, new { error = "An error occurred." }); }
 
         }
+
+        [HttpDelete("DeleteUser/{userName}")]
+        public IActionResult DeleteUser(string userName)
+        {
+            try
+            {
+                bool deleted = UsersServiceBLL.DeleteUser(userName);
+
+                if (deleted)
+                {
+                    return Ok("User deleted successfully.");
+                }
+
+                return BadRequest("Failed to delete user or user file was deleted.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while deleting the user: {ex.Message}");
+            }
+        }
+
     }
     public class UserCredentials
     {

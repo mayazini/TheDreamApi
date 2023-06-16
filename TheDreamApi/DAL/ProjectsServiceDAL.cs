@@ -57,17 +57,11 @@ namespace TheDreamApi.DAL
                 {
                     return "Failed to insert requirement into the database";
                 }
-                else
-                {
-                    // Insert the event into the Events table
-                    string eventQuery = $"INSERT INTO Events (EventType, Time, projectId) VALUES ('{EventTypes.createNewProject}', '{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}', '{projectId}')";
-                    int result = SQLHelper.DoQuery(eventQuery);
-
-                    return result > 0 ? "" : "error in the query";
-                }
             }
+            string eventQuery = $"INSERT INTO Events (EventType, Time, projectId) VALUES ('{EventTypes.createNewProject}', '{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}', '{projectId}')";
+            int result = SQLHelper.DoQuery(eventQuery);
 
-            return "";
+            return result > 0 ? "" : "error in the query";
         }
 
 

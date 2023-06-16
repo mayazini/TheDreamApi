@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\Users\maya\**" />
+    <Content Remove="wwwroot\Users\maya\**" />
+    <EmbeddedResource Remove="wwwroot\Users\maya\**" />
+    <None Remove="wwwroot\Users\maya\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
@@ -15,8 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-    <Folder Include="wwwroot\Users\maya\Resume\" />
+    <Folder Include="wwwroot\Users\" />
   </ItemGroup>
 
 </Project>

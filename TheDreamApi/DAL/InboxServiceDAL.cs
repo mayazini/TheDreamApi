@@ -8,6 +8,11 @@ namespace TheDreamApi.DAL
 {
     public class InboxServiceDAL
     {
+        //public static Inbox BuildMessage(DataRow row)
+        //{
+
+        //}
+
         public static string SendMessage(JsonElement json)
         {
             try

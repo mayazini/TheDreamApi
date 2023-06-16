@@ -55,12 +55,29 @@ namespace TheDreamApi.BLL
             return UserServiceDAL.Register(newUser);
 
         }
-        public static DataTable GetAllUsers()
+        public static List<User> GetAllUsers()
         {
-            return UserServiceDAL.GetAllUsers();
+            try
+            {
+                List<User> users = UserServiceDAL.GetAllUsers();
+                return users;
+            }
+            catch(Exception ex) { throw new Exception(ex.Message); }
 
         }
 
-        
+        public static bool DeleteUser(string userName)
+        {
+            try
+            {
+                return UserServiceDAL.DeleteUser(userName);
+            }
+            catch(Exception ex)
+            {
+                return false;
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

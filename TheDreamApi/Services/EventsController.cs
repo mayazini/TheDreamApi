@@ -16,35 +16,15 @@ namespace TheDreamApi.Services
         {
             try
             {
-                DataTable dt = EventsServiceBLL.GetCharts();
-                if (dt != null && dt.Rows.Count > 0)
+                (string message , List<ChartData> chartData) = EventsServiceBLL.GetCharts();
+                if (message == "successfull") { return Ok(chartData); }                               
+                else if(message == "internal error")
                 {
-                    // Prepare the chart data
-                    var chartData = new List<ChartData>();
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        var eventType = row["EventType"].ToString();
-                        var eventDate = DateTime.Parse(row["EventDate"].ToString());
-                        var eventCount = int.Parse(row["EventCount"].ToString());
-
-                        // Create a new chart data object
-                        var data = new ChartData
-                        {
-                            EventType = eventType,
-                            EventDate = eventDate,
-                            EventCount = eventCount
-                        };
-
-                        // Add the chart data to the list
-                        chartData.Add(data);
-                    }
-
-                    // Return the chart data
-                    return Ok(chartData);
+                    return NotFound(new { error = "No chart data found" });
                 }
                 else
                 {
-                    return NotFound(new { error = "No chart data found" });
+                    return StatusCode(500, new { error = "An error occurred." });
                 }
             }
             catch (Exception ex)
