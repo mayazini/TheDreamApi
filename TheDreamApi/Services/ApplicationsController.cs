@@ -107,6 +107,26 @@ namespace TheDreamApi.Services
             }
         }
 
+        [HttpPut("UpdateApplicationStatus/{applicationId}")]
+        public async Task<IActionResult> UpdateApplicationStatus(int applicationId, [FromBody] StatusUpdateRequest request)
+        {
+            try
+            {
+                bool response = ApplicationsBLL.UpdateApplicationStatus(applicationId, request.Status);
+                if (!response)
+                {
+                    return NotFound(new { error = "Status update didnt work" });
+                }
+
+                return Ok("Updated application status");
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors that occur during the operation
+                return StatusCode(500, new { error = "An error occurred while retrieving applicants." });
+            }
+        }
+    
         //GetApplicantsByProject with the application data class
         //[HttpGet("GetApplicantsByProject/{projectId}")]
         //public async Task<IActionResult> GetApplicantsByProject(int projectId)

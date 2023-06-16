@@ -18,5 +18,21 @@ namespace TheDreamApi.BLL
 
         }
 
+        public static bool UpdateApplicationStatus(int applicationId, string status)
+        {
+            try
+            {
+                if (status == "Pending" || status == "Approved" || status == "Declined")
+                {
+                    return ApplicationsServiceDAL.UpdateApplicationStatus(applicationId, status);
+                }
+                throw new Exception("Requested status value invalid.");
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }
