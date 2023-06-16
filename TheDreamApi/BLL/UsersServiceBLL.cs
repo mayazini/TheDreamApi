@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using TheDreamApi.Models;
 using System.Linq;
 using System.Web;
 using System.Text.Json;
@@ -13,20 +14,45 @@ namespace TheDreamApi.BLL
     public class UsersServiceBLL
     {
 
-        public static DataTable GetUserDataBLL(string username, string password)
+        public static (User, string) Login(string username, string inputPassword)
         {
-            DataTable data = UserServiceDAL.GetUserDataByNameDAL(username, password);
-
-            if (data == null || data.Rows.Count == 0)// check if login incorrect
+            try
             {
-                return null;
+                User user = UserServiceDAL.GetUserDataByNameDAL(username);
+
+                string hashedInputPassword = HashingFunction.HashPasswordWithSalt(inputPassword, user.HashSalt);
+
+                if (hashedInputPassword == user.Password)
+                {
+                    return (user, "successfull login");
+                }
+                else
+                {
+                    return (null, "Incorrect password");
+                }
             }
-            return data;
+            catch (Exception ex)
+            {
+                if (ex.Message == "User not found")
+                {
+                    return (null, "User does not exist");
+                }
+                else
+                {
+                    // Unexpected error, rethrow the exception
+                    throw;
+                }
+            }
         }
 
-        public static string Register(JsonElement json)
+
+        public static string Register(User newUser)
         {
-            return UserServiceDAL.Register(json);
+            string salt = HashingFunction.GenerateSalt();
+            newUser.HashSalt = salt;
+            string passwordHash = HashingFunction.HashPasswordWithSalt(newUser.Password, salt);
+            newUser.Password = passwordHash;
+            return UserServiceDAL.Register(newUser);
 
         }
         public static DataTable GetAllUsers()

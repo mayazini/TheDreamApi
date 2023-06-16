@@ -7,6 +7,7 @@ using System.Data;
 using Microsoft.AspNetCore.Cors;
 using System.Text.Json.Nodes;
 using System.Text.Json;
+using TheDreamApi.Models;
 
 namespace TheDreamApi.web_service
 {
@@ -15,34 +16,30 @@ namespace TheDreamApi.web_service
     public class UserController : ControllerBase
     {
         //[EnableCors("AllowSpecificOrigin")]
-        [HttpPost("GetUserData")]
-        public IActionResult GetUserData(JsonElement json)
+        [HttpPost("Login")]
+        public IActionResult Login([FromBody] UserCredentials userCredentials)
         {
             try
             {
-                dynamic obj = JsonNode.Parse(json.GetRawText());
-                string username = (string)obj["username"];
-                string password = (string)obj["password"];
+                string username = userCredentials.Username;
+                string password = userCredentials.Password;
 
-                // Get the user data
-                var dt = UsersServiceBLL.GetUserDataBLL(username, password);
-                if (dt == null)
+                // Get the user data and error message
+                (User user, string errorMessage) = UsersServiceBLL.Login(username, password);
+
+                // If user is not null, return the user data
+                if (user != null)
                 {
-                    return NotFound(new { error = "User not found." });
+                    return Ok(user);
                 }
 
-                // Convert DataTable to a list of dictionaries
-                var rows = dt.AsEnumerable()
-                    .Select(row => dt.Columns.Cast<DataColumn>()
-                        .ToDictionary(column => column.ColumnName, column => row[column]));
-
-                // Return the serialized data
-                return Ok(rows);
+                // If user is null, return the error message
+                return BadRequest(new { error = errorMessage });
             }
             catch (Exception ex)
             {
                 // Log the error and return a 500 Internal Server Error
-                return StatusCode(500, new { error = "An error occurred." });
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
@@ -51,9 +48,16 @@ namespace TheDreamApi.web_service
         {
             try
             {
-                string response = UsersServiceBLL.Register(value);
+                dynamic obj = JsonNode.Parse(value.GetRawText());
+                User user = new User();
+                user.Email = (string)obj["username"];
+                user.UserName = (string)obj["email"];
+                user.Password = (string)obj["password"];
+                //user.Age = (int)obj["age"];
+                string response = UsersServiceBLL.Register(user);
                 if (response == "ok")
                 {
+
                     return Ok();
                 }
                 if (response == "username already taken")
@@ -62,7 +66,6 @@ namespace TheDreamApi.web_service
                 }
                 else
                 {
-
                     return StatusCode(500, new { error = response });
                 }
             }
@@ -92,5 +95,10 @@ namespace TheDreamApi.web_service
             catch (Exception ex) { return StatusCode(500, new { error = "An error occurred." }); }
 
         }
+    }
+    public class UserCredentials
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

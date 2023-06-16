@@ -18,6 +18,7 @@ IWebHostEnvironment env = builder.Environment;
 
 // Add the hosting environment to the services
 builder.Services.AddSingleton<IWebHostEnvironment>(env);
+builder.Services.AddHostedService<RecommendationService>();
 
 var app = builder.Build();
 
