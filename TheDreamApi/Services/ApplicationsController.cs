@@ -60,28 +60,56 @@ namespace TheDreamApi.Services
         }
 
 
+        //[HttpPost("UploadResume/{userName}")]
+        //public async Task<IActionResult> Upload(IFormFile file,string userName)
+        //{
+        //    var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Users", userName, "Resume");
+        //    var filePath = Path.Combine(folderPath, file.FileName);
+
+        //    // Create the user's folder if it doesn't exist
+        //    if (!Directory.Exists(folderPath))
+        //    {
+        //        Directory.CreateDirectory(folderPath);
+        //        if (!System.IO.File.Exists(folderPath))
+        //        {
+        //            return NotFound();
+        //        }
+        //    } 
+        //    using (var stream = new FileStream(filePath, FileMode.Create))
+        //    {
+        //        await file.CopyToAsync(stream);
+        //    }
+
+        //    return Ok(new { FilePath = filePath });
+        //}
+
         [HttpPost("UploadResume/{userName}")]
-        public async Task<IActionResult> Upload(IFormFile file,string userName)
+        public async Task<IActionResult> UploadResume(IFormFile file, string userName)
         {
             var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Users", userName, "Resume");
-            var filePath = Path.Combine(folderPath, file.FileName);
+            var resumePath = Path.Combine(folderPath, "resume.pdf");
 
             // Create the user's folder if it doesn't exist
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
-                if (!System.IO.File.Exists(folderPath))
-                {
-                    return NotFound();
-                }
-            } 
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            }
+
+            if (System.IO.File.Exists(resumePath))
+            {
+                // Delete the existing resume file
+                System.IO.File.Delete(resumePath);
+            }
+
+            using (var stream = new FileStream(resumePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            return Ok(new { FilePath = filePath });
+            return Ok(new { FilePath = resumePath });
         }
+
+
 
 
         [HttpGet("GetApplicantsByProject/{projectId}")]
@@ -134,12 +162,12 @@ namespace TheDreamApi.Services
         public IActionResult Download(string userName,string resumeFileName)
         {
             // Get the file path
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","Users", userName,"Resume", resumeFileName);
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","Users", userName,"Resume", "resume.pdf");
 
             // Check if file exists
             if (!System.IO.File.Exists(path))
             {
-                return NotFound();
+                return NotFound("file doesnt exist");
             }
 
             // Get the file's mime type
@@ -148,6 +176,25 @@ namespace TheDreamApi.Services
             // Return the file
             return File(System.IO.File.ReadAllBytes(path), mimeType, resumeFileName);
         }
+
+        //[HttpGet("DownloadResume/{userName}/{resumeFileName}")]
+        //public IActionResult Download(string userName, string resumeFileName)
+        //{
+        //    // Get the file path
+        //    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Users", userName, "Resume", resumeFileName);
+
+        //    // Check if file exists
+        //    if (!System.IO.File.Exists(path))
+        //    {
+        //        return NotFound("file doesnt exist");
+        //    }
+
+        //    // Get the file's mime type
+        //    var mimeType = GetMimeType(path);
+
+        //    // Return the file
+        //    return File(System.IO.File.ReadAllBytes(path), mimeType, resumeFileName);
+        //}
 
         // Helper method to get the mime type of a file. This is used to ensure the browser knows what type of file it's downloading.
         private string GetMimeType(string filePath)

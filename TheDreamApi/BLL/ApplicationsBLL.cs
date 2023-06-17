@@ -22,7 +22,7 @@ namespace TheDreamApi.BLL
         {
             try
             {
-                if (status == "Pending" || status == "Approved" || status == "Declined")
+                if (status == "Pending" || status == "Accepted" || status == "Declined")
                 {
                     return ApplicationsServiceDAL.UpdateApplicationStatus(applicationId, status);
                 }
