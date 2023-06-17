@@ -59,7 +59,8 @@ namespace TheDreamApi.Services
             }
         }
 
-        [HttpPut("ApplicationsByApplicantName/{applicantName}")]
+
+        [HttpGet("ApplicationsByApplicantName/{applicantName}")]
         public IActionResult GetApplicationsByApplicantName(string applicantName)
         {
             try
@@ -67,7 +68,7 @@ namespace TheDreamApi.Services
                 List<ApplicationData> applicationList = ApplicationsBLL.GetApplicationsByApplicantName(applicantName);
 
                 // Return a success response
-                return Ok(new { message = "Application submitted successfully." });
+                return Ok(applicationList);
             }
             catch (Exception ex)
             {
@@ -193,25 +194,6 @@ namespace TheDreamApi.Services
             // Return the file
             return File(System.IO.File.ReadAllBytes(path), mimeType, resumeFileName);
         }
-
-        //[HttpGet("DownloadResume/{userName}/{resumeFileName}")]
-        //public IActionResult Download(string userName, string resumeFileName)
-        //{
-        //    // Get the file path
-        //    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Users", userName, "Resume", resumeFileName);
-
-        //    // Check if file exists
-        //    if (!System.IO.File.Exists(path))
-        //    {
-        //        return NotFound("file doesnt exist");
-        //    }
-
-        //    // Get the file's mime type
-        //    var mimeType = GetMimeType(path);
-
-        //    // Return the file
-        //    return File(System.IO.File.ReadAllBytes(path), mimeType, resumeFileName);
-        //}
 
         // Helper method to get the mime type of a file. This is used to ensure the browser knows what type of file it's downloading.
         private string GetMimeType(string filePath)

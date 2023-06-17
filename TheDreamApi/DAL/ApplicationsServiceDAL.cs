@@ -14,6 +14,7 @@ namespace TheDreamApi.DAL
             application.ProjectId = row["ProjectId"] != DBNull.Value ? Convert.ToInt32(row["ProjectId"]) : 0;
             application.Requirement.Description = row["RequirementDescription"] != DBNull.Value ? row["RequirementDescription"].ToString() : null;
             application.Message = row["Message"] != DBNull.Value ? row["Message"].ToString() : null;
+            application.ResumePath = row["ResumePath"] != DBNull.Value ? row["ResumePath"].ToString() : null;
             return application;
         }
 
@@ -67,6 +68,8 @@ namespace TheDreamApi.DAL
                 foreach (DataRow row in dt.Rows)
                 {
                     ApplicationData application = BuildApplication(row);
+                    application.Project.CreatorName = row["CreatorName"] != DBNull.Value ? row["CreatorName"].ToString() : null;
+                    application.Project.ProjectName = row["ProjectName"] != DBNull.Value ? row["ProjectName"].ToString() : null;
                     applications.Add(application);
                 }
 
