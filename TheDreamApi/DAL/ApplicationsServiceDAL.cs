@@ -57,12 +57,12 @@ namespace TheDreamApi.DAL
             return response==1;
         }
 
-        public static List<ApplicationData> GetApplicationsByApplicantName(string applicantName)
+        public static List<ApplicationData> GetApplicationsByApplicantName(string spaceName, string applicantName)
         {
             try
             {
-                string query = "exec GetApplicationsByApplicantName " + applicantName;
-                DataTable dt = SQLHelper.SelectData(query);
+                string query = "exec GetApplicationsByApplicantName " + applicantName +","+ spaceName;
+                DataTable dt = SQLHelper.SelectData(query); 
                 List<ApplicationData> applications = new List<ApplicationData>();
 
                 foreach (DataRow row in dt.Rows)

@@ -43,11 +43,11 @@ namespace TheDreamApi.BLL
             }
         }
 
-        public static List<ApplicationData> GetApplicationsByApplicantName(string applicantName)
+        public static List<ApplicationData> GetApplicationsByApplicantName(string spaceName, string applicantName)
         {
             try
             {
-                return ApplicationsServiceDAL.GetApplicationsByApplicantName(applicantName);
+                return ApplicationsServiceDAL.GetApplicationsByApplicantName(spaceName,applicantName);
             }
             catch (Exception ex)
             {

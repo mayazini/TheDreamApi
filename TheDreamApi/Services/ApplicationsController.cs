@@ -60,12 +60,12 @@ namespace TheDreamApi.Services
         }
 
 
-        [HttpGet("ApplicationsByApplicantName/{applicantName}")]
-        public IActionResult GetApplicationsByApplicantName(string applicantName)
+        [HttpGet("ApplicationsByApplicantName/{spaceName}/{applicantName}")]
+        public IActionResult GetApplicationsByApplicantName(string spaceName, string applicantName)
         {
             try
             {
-                List<ApplicationData> applicationList = ApplicationsBLL.GetApplicationsByApplicantName(applicantName);
+                List<ApplicationData> applicationList = ApplicationsBLL.GetApplicationsByApplicantName(spaceName,applicantName);
 
                 // Return a success response
                 return Ok(applicationList);

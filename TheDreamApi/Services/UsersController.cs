@@ -53,6 +53,9 @@ namespace TheDreamApi.web_service
                 user.UserName = (string)obj["username"];
                 user.Email = (string)obj["email"];
                 user.Password = (string)obj["password"];
+                user.FirstName = (string)obj["firstName"];
+                user.LastName = (string)obj["lastName"];
+                user.LinkedInLink = obj["linkedIn"]!=null ? (string)obj["linkedIn"] : string.Empty;
                 //user.Age = (int)obj["age"];
                 string response = UsersServiceBLL.Register(user);
                 if (response == "ok")
