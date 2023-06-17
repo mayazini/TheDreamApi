@@ -60,29 +60,11 @@ namespace TheDreamApi.Services
             try
             {
                 // Get the user data
-                var dt = ProjectsServiceBLL.GetProjectsBySpace(spaceName);
-                if (dt == null)
+                List<Project> projects = ProjectsServiceBLL.GetProjectsBySpace(spaceName);
+                if (projects == null)
                 {
                     return NotFound(new { error = "no projects" });
                 }
-
-                var projects = dt.AsEnumerable().Select(row => new Project
-                {
-                    ProjectId = row.Field<int>("Id"),
-                    ProjectName = row.Field<string>("ProjectName"),
-                    Description = row.Field<string>("Description"),
-                    CreatorName = row.Field<string>("CreatorName"),
-                    Requirements = dt.AsEnumerable()
-                .Where(r => r.Field<int>("ProjectId") == row.Field<int>("Id"))
-                .Select(r => new Requirement
-                {
-                    Description = r.Field<string>("RequirementDescription"),
-                    Amount = r.Field<int>("Amount"),
-                    ProjectId = row.Field<int>("ProjectId"),
-                    Id = r.Field<int>("RequirementId")
-                })
-                .ToList()
-                });
                 // Return the serialized data
                 return Ok(projects);
             }
@@ -93,14 +75,15 @@ namespace TheDreamApi.Services
             }
         }
 
-        
+
 
         [HttpPut("CreateNewProject")]
         public IActionResult CreateNewProject([FromBody] JsonElement value)
         {
             try
             {
-                string response = ProjectsServiceBLL.CreateNewProject(value);
+                Project project = Project.BuildProjectFromClient(value);
+                string response = ProjectsServiceBLL.CreateNewProject(project);
                 if (response == "")
                 {
                     return Ok();

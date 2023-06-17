@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using TheDreamApi.Models;
 using System.Text.Json;
 using TheDreamApi.DAL;
 
@@ -6,15 +7,15 @@ namespace TheDreamApi.BLL
 {
     public class ProjectsServiceBLL
     { 
-        public static DataTable GetProjectsBySpace(string spaceName)
+        public static List<Project> GetProjectsBySpace(string spaceName)
         {
-            DataTable data = ProjectsServiceDAL.GetProjectsBySpace(spaceName);
+            List<Project> projects = ProjectsServiceDAL.GetProjectsBySpace(spaceName);
 
-            if (data == null || data.Rows.Count == 0)// check if login incorrect
+            if (projects == null || projects.Count == 0)// check if login incorrect
             {
                 return null;
             }
-            return data;
+            return projects;
         }
         public static DataTable GetProjectsBySpaceAndName(string spaceName, string creatorName)
         {
@@ -26,9 +27,9 @@ namespace TheDreamApi.BLL
             }
             return data;
         }
-        public static string CreateNewProject(JsonElement json)
+        public static string CreateNewProject(Project project)
         {
-            string response = ProjectsServiceDAL.CreateNewProject(json);
+            string response = ProjectsServiceDAL.CreateNewProject(project);
             return response;
         }
 

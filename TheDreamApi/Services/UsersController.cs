@@ -50,8 +50,8 @@ namespace TheDreamApi.web_service
             {
                 dynamic obj = JsonNode.Parse(value.GetRawText());
                 User user = new User();
-                user.Email = (string)obj["username"];
-                user.UserName = (string)obj["email"];
+                user.UserName = (string)obj["username"];
+                user.Email = (string)obj["email"];
                 user.Password = (string)obj["password"];
                 //user.Age = (int)obj["age"];
                 string response = UsersServiceBLL.Register(user);
