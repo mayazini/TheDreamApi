@@ -50,7 +50,7 @@ namespace TheDreamApi.DAL
         {
             try
             {
-                string query = "exec spGetProjectsBySpace @SpaceName = "+ spaceName;
+                string query = "exec spGetProjectsAndRequirements @SpaceName = " + spaceName;
                 List<Project> projectList = new List<Project>();
 
                 DataTable dt = SQLHelper.SelectData(query);
@@ -83,11 +83,39 @@ namespace TheDreamApi.DAL
 
 
 
-        public static DataTable GetCinemaProjectsByName(string spaceName, string creatorName)
+        public static List<Project> GetCinemaProjectsByName(string spaceName, string creatorName)
         {
-            string query = $"SELECT p.*, r.Description AS RequirementDescription, r.Amount, r.ProjectId FROM Projects p JOIN Requirements r ON p.Id = r.ProjectId WHERE p.SpaceId = (SELECT Id FROM Spaces WHERE Space = '{spaceName}') AND p.CreatorName = '{creatorName}'";
-            DataTable result = SQLHelper.SelectData(query);
-            return result;
+            try
+            {
+                string query = $"EXEC spGetProjectsAndRequirements @spaceName = '{spaceName}', @creatorName = '{creatorName}'";
+                List<Project> projectList = new List<Project>();
+
+                DataTable dt = SQLHelper.SelectData(query);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    var groupedRows = dt.AsEnumerable().GroupBy(row => row.Field<int>("Id"));
+
+                    foreach (var group in groupedRows)
+                    {
+                        var project = BuildProject(group);
+                        projectList.Add(project);
+                    }
+                }
+
+                if (projectList.Count > 0)
+                {
+                    return projectList;
+                }
+                else
+                {
+                    throw new Exception("No projects found");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Unknown error");
+            }
         }
 
         public static string CreateNewProject(Project project)

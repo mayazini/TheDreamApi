@@ -11,21 +11,21 @@ namespace TheDreamApi.BLL
         {
             List<Project> projects = ProjectsServiceDAL.GetProjectsBySpace(spaceName);
 
-            if (projects == null || projects.Count == 0)// check if login incorrect
+            if (projects == null || projects.Count == 0)
             {
                 return null;
             }
             return projects;
         }
-        public static DataTable GetProjectsBySpaceAndName(string spaceName, string creatorName)
+        public static List<Project> GetProjectsBySpaceAndName(string spaceName, string creatorName)
         {
-            DataTable data = ProjectsServiceDAL.GetCinemaProjectsByName(spaceName, creatorName);
+            List<Project> projetcs = ProjectsServiceDAL.GetCinemaProjectsByName(spaceName, creatorName);
 
-            if (data == null || data.Rows.Count == 0)// check if login incorrect
+            if (projetcs == null || projetcs.Count == 0)
             {
                 return null;
             }
-            return data;
+            return projetcs;
         }
         public static string CreateNewProject(Project project)
         {

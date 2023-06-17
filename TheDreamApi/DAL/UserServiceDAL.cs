@@ -67,7 +67,7 @@ namespace TheDreamApi.DAL
                 if (check.Rows.Count == 0)
                 {
 
-                    string query = $"INSERT INTO Users (Email, Username, Password,IsAdmin,HashSalt) VALUES ('{user.Email}', '{user.UserName}', '{user.Password}','false','{user.HashSalt}')";
+                    string query = $"exec spInsertUserData @UserName='{user.UserName}',@Password='{user.Password}',@Email='{user.Email}',@Age='{user.Age}',@IsAdmin='{user.IsAdmin}',@LinkedInLink='{user.LinkedInLink}',@FirstName='{user.FirstName}',@LastName='{user.LastName}',@HashSalt='{user.HashSalt}'";
                     affected = SQLHelper.DoQuery(query);
 
                     if (affected > 0)

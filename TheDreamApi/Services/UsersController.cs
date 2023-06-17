@@ -69,7 +69,7 @@ namespace TheDreamApi.web_service
                     return StatusCode(500, new { error = response });
                 }
             }
-           catch(Exception ex) { return StatusCode(500, new { error = "An error occurred." }); }
+           catch(Exception ex) { return StatusCode(500, new { error = "An error occurred: " + ex.Message }); }
 
         }
 

@@ -22,7 +22,7 @@ public class RecommendationService : IHostedService, IDisposable
     public Task StartAsync(CancellationToken cancellationToken)
     {
         // Start the timer when the application starts
-       // timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromHours(1));
+        // timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromHours(1));
         timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
         return Task.CompletedTask;
     }

@@ -7,6 +7,7 @@ using System.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using TheDreamApi.DAL;
+using ServiceReference1;
 using TheDreamApi.Models;
 
 namespace TheDreamApi.BLL
@@ -48,11 +49,20 @@ namespace TheDreamApi.BLL
 
         public static string Register(User newUser)
         {
-            string salt = HashingFunction.GenerateSalt();
-            newUser.HashSalt = salt;
-            string passwordHash = HashingFunction.HashPasswordWithSalt(newUser.Password, salt);
-            newUser.Password = passwordHash;
-            return UserServiceDAL.Register(newUser);
+            var client = new ServiceReference1.ValidationSoapClient(ServiceReference1.ValidationSoapClient.EndpointConfiguration.ValidationSoap); // Instantiate the generated client proxy
+
+            var response = client.isEmailAsync(newUser.Email).GetAwaiter().GetResult();
+
+            bool isEmailValid = response.Body.isEmailResult;
+            if (isEmailValid)
+            {
+                string salt = HashingFunction.GenerateSalt();
+                newUser.HashSalt = salt;
+                string passwordHash = HashingFunction.HashPasswordWithSalt(newUser.Password, salt);
+                newUser.Password = passwordHash;
+                return UserServiceDAL.Register(newUser);
+            }
+            return "invalid email";
 
         }
         public static List<User> GetAllUsers()

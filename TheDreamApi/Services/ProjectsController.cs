@@ -23,28 +23,11 @@ namespace TheDreamApi.Services
             try
             {
                 // Get the user data
-                var dt = ProjectsServiceBLL.GetProjectsBySpaceAndName(spaceName, creatorName);
-                if (dt == null)
+                List<Project> projects = ProjectsServiceBLL.GetProjectsBySpaceAndName(spaceName, creatorName);
+                if (projects == null)
                 {
                     return NotFound(new { error = "no projects" });
                 }
-
-                var projects = dt.AsEnumerable().Select(row => new Project
-                {
-                    ProjectId = row.Field<int>("Id"),
-                    ProjectName = row.Field<string>("ProjectName"),
-                    Description = row.Field<string>("Description"),
-                    CreatorName = row.Field<string>("CreatorName"),
-                    Requirements = dt.AsEnumerable()
-                .Where(r => r.Field<int>("ProjectId") == row.Field<int>("Id"))
-                .Select(r => new Requirement
-                {
-                    Description = r.Field<string>("RequirementDescription"),
-                    Amount = r.Field<int>("Amount")
-                })
-                .ToList()
-                });
-                // Return the serialized data
                 return Ok(projects);
             }
             catch (Exception ex)
