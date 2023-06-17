@@ -30,13 +30,14 @@ namespace TheDreamApi.DAL
         public static string CreateNewProject(JsonElement json)
         {
             dynamic obj = JsonNode.Parse(json.GetRawText());
+            string spaceName = (string)obj["spaceName"];
             string projectName = (string)obj["projectName"];
             string description = (string)obj["description"];
             string creatorName = (string)obj["creatorName"];
             var requirements = obj["requirements"];
 
             // Insert the project information into the CinemaProjects table
-            string projectQuery = $"INSERT INTO Projects (projectName, description, CreatorName, SpaceId) VALUES ('{projectName}', '{description}', '{creatorName}', (SELECT Id FROM Spaces WHERE Space = 'cinema')); SELECT SCOPE_IDENTITY();";
+            string projectQuery = $"exec spInsertNewProject " + spaceName +", "+  projectName+","+ description+","+ creatorName;
             int projectId = SQLHelper.SelectScalarToInt32(projectQuery);
 
             if (projectId == 0)
