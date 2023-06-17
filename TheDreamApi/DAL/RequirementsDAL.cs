@@ -12,5 +12,12 @@ namespace TheDreamApi.DAL
             int result = SQLHelper.DoQuery(requirementQuery);
             return result > 0;
         }
+
+        public static int GetRequirementCountByApplication(int applicationId)
+        {
+            string requirementQuery = "exec spGetRequirementCountByApplication " + applicationId;
+            int result = SQLHelper.SelectScalarToInt32(requirementQuery);
+            return result ;
+        }
     }
 }

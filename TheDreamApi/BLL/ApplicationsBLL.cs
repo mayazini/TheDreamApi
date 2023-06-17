@@ -22,9 +22,18 @@ namespace TheDreamApi.BLL
         {
             try
             {
-                if (status == "Pending" || status == "Accepted" || status == "Declined")
+                if (status == "Pending" || status == "Declined")
                 {
                     return ApplicationsServiceDAL.UpdateApplicationStatus(applicationId, status);
+                }
+                else if (status == "Accepted"  && RequirementBLL.HasSpace(applicationId))
+                {
+                    return ApplicationsServiceDAL.UpdateApplicationStatus(applicationId, status);
+                }
+                if (status == "Accepted")
+                {
+                    throw new Exception("No more space");
+
                 }
                 throw new Exception("Requested status value invalid.");
             }
@@ -33,6 +42,19 @@ namespace TheDreamApi.BLL
                 throw new Exception(ex.Message);
             }
         }
+
+        public static List<ApplicationData> GetApplicationsByApplicantName(string applicantName)
+        {
+            try
+            {
+                return ApplicationsServiceDAL.GetApplicationsByApplicantName(applicantName);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
 
     }
 }

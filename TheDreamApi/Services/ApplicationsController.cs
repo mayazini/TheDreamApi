@@ -41,7 +41,7 @@ namespace TheDreamApi.Services
                     application.Email = (string)obj["email"];
                     application.ProjectId = (int)(obj["projectId"]);
                     application.Message = (string)obj["message"];
-                    application.UserName = (string)obj["ApplicantName"];
+                    application.ApplicantName = (string)obj["ApplicantName"];
                 }
                 catch (Exception ex)
                 {
@@ -49,6 +49,23 @@ namespace TheDreamApi.Services
                     return StatusCode(500, new { error = "invalid input." });
                 }
                 string response = ApplicationsBLL.Apply(application);
+                // Return a success response
+                return Ok(new { message = "Application submitted successfully." });
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors that occur during the operation
+                return StatusCode(500, new { error = "An error occurred while processing the application." });
+            }
+        }
+
+        [HttpPut("ApplicationsByApplicantName/{applicantName}")]
+        public IActionResult GetApplicationsByApplicantName(string applicantName)
+        {
+            try
+            {
+                List<ApplicationData> applicationList = ApplicationsBLL.GetApplicationsByApplicantName(applicantName);
+
                 // Return a success response
                 return Ok(new { message = "Application submitted successfully." });
             }
